@@ -1,23 +1,49 @@
 {
   "name": "makesense",
   "displayName": "makesense",
-  "description": "Makefile 提示 补全 跳转 帮助",
+  "description": "Makefile Prompt Complement Jump Help",
   "version": "0.0.1",
+  "publisher": "kamilu",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/luzhixing12345/makesense"
+  },
+  "bugs": {
+    "email": "luzhixing12345@163.com",
+    "url": "https://github.com/luzhixing12345/makesense/issues"
+  },
+  "homepage": "https://github.com/luzhixing12345/makesense",
+  "keywords": [
+    "Makefile",
+    "makefile",
+    "MAKEFILE"
+  ],
   "engines": {
     "vscode": "^1.76.0"
   },
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+    "onLanguage:makefile"
+  ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "makesense.helloWorld",
-        "title": "Hello World"
+        "command": "makesense.createMakefile",
+        "title": "Create Makefile"
       }
-    ]
+    ],
+    "menus": {
+        "explorer/context": [
+            {
+                "when": "explorerViewletFocus",
+                "command": "makesense.createMakefile"
+            }
+        ]
+        
+    }
   },
   "scripts": {
     "vscode:prepublish": "pnpm run compile",
