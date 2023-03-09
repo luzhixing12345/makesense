@@ -24,11 +24,29 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [
-    "onLanguage:makefile"
-  ],
+  "activationEvents": [],
   "main": "./out/extension.js",
   "contributes": {
+    "configuration": {
+      "title": "makesense language",
+      "properties": {
+        "language": {
+          "type": "string",
+          "enum": [
+            "en",
+            "zh"
+          ],
+          "default": "zh",
+          "description": "The language used by the extension"
+        }
+      }
+    },
+    "snippets": [
+      {
+        "language": "makefile",
+        "path": "./makefile_snippets.json"
+      }
+    ],
     "commands": [
       {
         "command": "makesense.createMakefile",
@@ -36,14 +54,23 @@
       }
     ],
     "menus": {
-        "explorer/context": [
-            {
-                "when": "explorerViewletFocus",
-                "command": "makesense.createMakefile"
-            }
-        ]
-        
-    }
+      "explorer/context": [
+        {
+          "when": "explorerViewletFocus",
+          "command": "makesense.createMakefile"
+        }
+      ]
+    },
+    "languages": [
+      {
+        "id": "makefile",
+        "extensions": [
+          ".mk",
+          ".mak"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ]
   },
   "scripts": {
     "vscode:prepublish": "pnpm run compile",

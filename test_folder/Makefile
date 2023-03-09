@@ -1,3 +1,4 @@
+
 ifneq ($(KERNELRELEASE),)
 
 obj-m:=hello.o
@@ -10,3 +11,7 @@ clean:
 	@rm -f *.ko *.o *.mod.o *.symvers *.mod.c *.order .*.cmd .cache.mk
 	@rm -r .tmp_versions
 endif
+
+
+$(subst <from>,<to>,<text>)
+$(patsubst <pattern>,<replacement>,<text>)
