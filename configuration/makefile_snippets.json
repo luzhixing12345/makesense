@@ -23,5 +23,14 @@
   "$patsubst": {
     "prefix": "$(patsubst",
     "body": ["$(patsubst ${1:<pattern>},${2:<replacement>},${3:<text>}"]
+  },
+  "strip": {
+    "prefix": "strip",
+    "body":[
+        "$(strip ${1:<string>})"
+    ],
+    "description": {
+        "zh": "去掉 `string` 开头结尾的空格"
+    }
   }
 }

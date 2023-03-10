@@ -46,7 +46,7 @@
     "snippets": [
       {
         "language": "makefile",
-        "path": "./makefile_snippets.json"
+        "path": "./configuration/makefile_snippets.json"
       }
     ],
     "commands": [
@@ -70,14 +70,8 @@
           ".mk",
           ".mak"
         ],
-        "configuration": "./language-configuration.json"
-      },
-      {
-        "id": "semanticLanguage",
-        "extensions": [
-            ".semanticLanguage"
-        ]
-    }
+        "configuration": "./configuration/language-configuration.json"
+      }
     ]
   },
   "scripts": {
