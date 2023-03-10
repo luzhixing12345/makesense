@@ -12,7 +12,7 @@ export class MakefileParser {
   }
 
   reload() {
-    // console.log("reload");
+    // reload to register makefile snippets after user changed language
     this.registerMakefileSnippets(this.makefileSnippetPath);
   }
 
@@ -21,7 +21,6 @@ export class MakefileParser {
     let makefileSnippetsJson = JSON.parse(makefileSnippetFile.toString());
     const config = vscode.workspace.getConfiguration();
     let language = config.get<string>('language');
-    // console.log(config,'?',language);
     if (language === undefined) {
         language = 'en';
     }
@@ -40,6 +39,7 @@ export class MakefileParser {
   ): vscode.ProviderResult<vscode.Hover> {
     const range = document.getWordRangeAtPosition(position);
     const functionName = document.getText(range);
+    console.log("catch ",functionName);
     const functionDoc = this.getFunctionDoc(functionName);
     if (functionDoc) {
       return new vscode.Hover(functionDoc);

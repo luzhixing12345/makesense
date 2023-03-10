@@ -24,7 +24,9 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+    "onCommand:makesense.triggerSuggest"
+  ],
   "main": "./out/extension.js",
   "contributes": {
     "configuration": {
@@ -69,7 +71,13 @@
           ".mak"
         ],
         "configuration": "./language-configuration.json"
-      }
+      },
+      {
+        "id": "semanticLanguage",
+        "extensions": [
+            ".semanticLanguage"
+        ]
+    }
     ]
   },
   "scripts": {

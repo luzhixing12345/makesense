@@ -12,6 +12,8 @@ clean:
 	@rm -r .tmp_versions
 endif
 
-
 $(subst <from>,<to>,<text>)
 $(patsubst <pattern>,<replacement>,<text>)
+
+
+PWD = 10
