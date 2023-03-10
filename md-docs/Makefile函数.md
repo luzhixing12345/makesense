@@ -15,7 +15,7 @@ $(<function> <arguments>)
 
 > 不建议使用{},统一使用()
 
-**注意**, Makefile的所有变量都是字符串, 所以一定要注意空格的使用, 比如 `$(f 1,2)` 和 `$(f 1 , 2 )` 是不同的, 带入的参数是包含空格的
+**注意**, Makefile的所有变量都是字符串, 所以一定要注意空格的使用, 比如 `$(f 1,2)` 和 `$(f 1 , 2 )` 是不同的, 带入的参数是包含空格的, 所以向函数提供参数时，**最安全的做法是去除所有多余的空格**
 
 ## subst
 
@@ -221,3 +221,233 @@ $(firstword foo bar)
 
 笔者注: 功能完全等价于 `$(word 1,<text>)`
 
+## dir
+
+```Makefile
+$(dir <names...>)
+```
+
+- 功能: 从文件名序列 `names` 中取出目录部分。目录部分是指最后一个反斜杠（/ ）之前的部分。如果没有反斜杠，那么返回 ./
+- 返回值: 文件名序列 `names` 的目录部分
+
+```Makefile
+$(dir src/foo.c hacks s/c)
+# src/ ./ s/
+```
+
+## notdir
+
+```Makefile
+$(notdir <names...>)
+```
+
+- 功能: 从文件名序列 `names` 中取出非目录部分。非目录部分是指最後一个反斜杠（/ ）之后的部分
+- 返回值: 文件名序列 `names` 的非目录部分
+
+```Makefile
+$(notdir src/foo.c hacks)
+# foo.c hacks
+```
+
+笔者注: dir 和 notdir 算是很常用很实用的功能了, 可以比较有效的差分目录, 合并文件结构等等
+
+## suffix
+
+```Makefile
+$(suffix <names...>)
+```
+
+- 功能: 从文件名序列 `names` 中取出各个文件名的后缀
+- 返回值: 文件名序列 `names` 的后缀序列，**如果文件没有后缀，则返回空字串**
+
+```Makefile
+$(suffix src/foo.c src-1.0/bar.c hacks x.config.y)
+# .c .c .y
+```
+
+笔者注: 这里的后缀就是最后一个.的后面的字符串, 所以如果是类似x.config.y这种情况也需要注意一下
+
+## basename
+
+```Makefile
+$(basename <names...>)
+```
+
+- 功能: 从文件名序列 `names` 中取出各个文件名的前缀部分
+- 返回值: 回文件名序列 `names` 的前缀序列，如果文件没有前缀，则返回空字串
+
+```Makefile
+$(basename src/foo.c src-1.0/bar.c hacks)
+# src/foo src-1.0/bar hacks
+```
+
+## addsuffix
+
+```Makefile
+$(addsuffix <suffix>,<names...>)
+```
+
+- 功能: 把后缀 `suffix` 加到 `names` 中的每个单词后面
+- 返回值: 加过后缀的文件名序列
+
+```Makefile
+$(addsuffix .c,foo bar)
+# foo.c bar.c
+```
+
+## addprefix
+
+```Makefile
+$(addprefix <prefix>,<names...>)
+```
+
+- 功能: 把前缀 `prefix` 加到 `names` 中的每个单词前面
+- 返回值: 加过前缀的文件名序列
+
+```Makefile
+$(addprefix src/,foo bar)
+# src/foo src/bar
+```
+
+笔者注: 加后缀,删后缀,加前缀,删前缀这种比较常用的函数确实很多时候会遇到
+
+## join
+
+```Makefile
+$(join <list1>,<list2>)
+```
+
+- 功能: 把 `list2` 中的单词对应地加到 `list1` 的单词后面
+  - 如果list1比list2多, 则多出来的保持原样
+  - 如果list2比list1多, 则多出来的被复制到list1中
+- 返回值: 连接过后的字符串
+
+```Makefile
+$(join aaa bbb ccc ddd, 111 222 333)
+# aaa111 bbb222 ccc333 ddd
+$(join aaa bbb , 111 222 333)
+# aaa111 bbb222 333
+```
+
+## foreach
+
+```Makefile
+$(foreach <var>,<list>,<text>)
+```
+
+- 功能: 把参数 `list` 中的单词逐一取出放到参数 `var` 所指定的变量中，然后再执行 `text` 所包含的表达式
+- 返回值: 每一次 `text` 会返回一个字符串，循环过程中，`text` 的所返回的每个字符串会以空格分隔，最后当整个循环结束，`text` 所返回的每个字符串所组成的整个字符串
+
+var 通常是一个变量名, list 可以是一个表达式，而 text 中一般会使用 var 这个参数来依次枚举 list 中的单词
+
+```Makefile
+names := a b c d
+files := $(foreach n,$(names),$(n).o)
+
+# $(name) 中的单词会被挨个取出，并存到变量 n 中，$(n).o 每次根据 $(n) 计算出
+# 一个值，这些值以空格分隔，最后作为 foreach 函数的返回
+# a.o b.o c.o d.o
+```
+
+笔者注: foreach 中的 `var` 参数是一个临时的局部变量，foreach 函数执行完后，参数 `var` 的变量将不在作用，其作用域只在 foreach 函数当中
+
+## if
+
+```Makefile
+$(if <condition>,<then-part>)
+$(if <condition>,<then-part>,<else-part>)
+```
+
+- 功能: `condition` 参数是 if 的表达式，如果其返回的为非空字符串，那么这个表达式就相当于返回真，于是，`then-part` 会被计算，否则 `else-part` 会被计算
+- 返回值: 如果 `condition` 为真（非空字符串），那个 `then-part` 会是整个函数的返回值，如果 `condition` 为假（空字符串），那么 `else-part` 会是整个函数的返回值，此时如果 `else-part` 没有被定义，那么，整个函数返回空字串
+
+```Makefile
+# 判断变量FOO是否为空
+x = $(if $(FOO),FOO is not empty,FOO is empty)
+```
+
+## call
+
+```Makefile
+$(call <expression>,<parm1>,<parm2>,...,<parmn>)
+```
+
+- 功能: 创建新的参数化的函数
+- 返回值: 当 make 执行这个函数时，`expression` 参数中的变量，如 $(1) 、$(2) 等，会被参数 parm1, parm2 依次取代。而 `expression` 的返回值就是 call 函数的返回值
+
+```Makefile
+reverse = $(2) $(1)
+foo = $(call reverse,a,b)
+
+# b a
+```
+
+## origin
+
+```Makefile
+$(origin <variable>)
+```
+
+- 功能: 输出变量的来源
+- 返回值: 变量的来源
+
+  - undefined: 从来没有定义过
+  - default: 是一个默认的定义，比如“CC”这个变量
+  - environment: 一个环境变量, 并且当 Makefile 被执行时，-e 参数没有被打开
+  - file: 量被定义在 Makefile 中
+  - command line: 变量是被命令行定义的
+  - override: 被 override 指示符重新定义的
+  - automatic: 是一个命令运行中的自动化变量
+
+笔者注: 这些信息对于我们编写 Makefile 是非常有用的，例如，假设我们有一个 Makefile 其包了一个定义文
+件 Make.def，在 Make.def 中定义了一个变量“bletch”，而我们的环境中也有一个环境变量“bletch”，此
+时，我们想判断一下，如果变量来源于环境，那么我们就把之重定义了，如果来源于 Make.def 或是命令
+行等非环境的，那么我们就不重新定义它。于是，在我们的 Makefile 中，我们可以这样写
+
+```Makefile
+ifdef bletch
+    ifeq "$(origin bletch)" "environment"
+        bletch = barf, gag, etc.
+    endif
+endif
+```
+
+## shell
+
+```Makefile
+contents := $(shell cat foo)
+files := $(shell echo *.c)
+```
+
+- 功能: 把执行操作系统命令后的输出作为函数返回
+- 返回值: 执行操作系统命令后的输出
+
+笔者注: 这个函数会新生成一个 Shell 程序来执行命令，所以你要注意其运行性能，如果你的 Makefile
+中有一些比较复杂的规则，并大量使用了这个函数，那么对于你的系统性能是有害的。特别是 Makefile
+的隐晦的规则可能会让你的 shell 函数执行的次数比你想像的多得多
+
+## error warning
+
+```Makefile
+$(error <text ...>)
+$(warning <text ...>)
+```
+
+- 功能: make 提供了一些函数来控制 make 的运行。通常，你需要检测一些运行 Makefile 时的运行时信息，并且根据这些信息来决定，你是让 make 继续执行，还是停止
+  - error: 退出makefile
+  - warining: 是输出一段警告信息，而 make 继续执行
+
+```Makefile
+# 会在变量 ERROR_001 定义了后执行时产生 error 调用
+
+ifdef ERROR_001
+    $(error error is $(ERROR_001))
+endif
+
+#目录 err 被执行时才发生 error 调用
+
+ERR = $(error found an error!)
+.PHONY: err
+err: $(ERR)
+
+``` 
