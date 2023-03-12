@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-
+import * as path from "path";
 
 export class MakefileParser {
 
@@ -7,7 +7,7 @@ export class MakefileParser {
   makefileSnippetPath: string;
   fs = vscode.workspace.fs;
   constructor(private context: vscode.ExtensionContext) {
-    this.makefileSnippetPath = this.context.asAbsolutePath('makefile_snippets.json');
+    this.makefileSnippetPath = this.context.asAbsolutePath(path.join('configuration','makefile_snippets.json'));
     this.registerMakefileSnippets(this.makefileSnippetPath);
   }
 

@@ -1,4 +1,3 @@
-
 ifneq ($(KERNELRELEASE),)
 
 obj-m:=hello.o
@@ -15,7 +14,5 @@ endif
 $(subst <from>,<to>,<text>)
 $(patsubst <pattern>,<replacement>,<text>)
 
-$(subst <from>,<to>,<text>)
 
 PWD = 10
-

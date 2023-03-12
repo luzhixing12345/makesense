@@ -25,12 +25,13 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:makesense.triggerSuggest"
+    "onCommand:makesense.triggerSuggest",
+    "onLanguage:json"
   ],
   "main": "./out/extension.js",
   "contributes": {
     "configuration": {
-      "title": "makesense language",
+      "title": "makesense configuration",
       "properties": {
         "language": {
           "type": "string",
@@ -40,7 +41,12 @@
           ],
           "default": "zh",
           "description": "The language used by the extension"
-        }
+        },
+        "jsonServer.exampleConfiguration": {
+            "scope": "resource",
+            "type": "string",
+            "default": "You can override this message."
+          }
       }
     },
     "snippets": [
@@ -53,6 +59,38 @@
       {
         "command": "makesense.createMakefile",
         "title": "Create Makefile"
+      },
+      {
+        "command": "countDownBlocking",
+        "title": "Count down 10 seconds [Blocking]"
+      },
+      {
+        "command": "countDownNonBlocking",
+        "title": "Count down 10 seconds [Non Blocking]"
+      },
+      {
+        "command": "progress",
+        "title": "Start the progress"
+      },
+      {
+        "command": "registerCompletions",
+        "title": "Register completions"
+      },
+      {
+        "command": "showConfigurationAsync",
+        "title": "Show Json Example Configuration [Async]"
+      },
+      {
+        "command": "showConfigurationCallback",
+        "title": "Show Json Example Configuration [Callback]"
+      },
+      {
+        "command": "showConfigurationThread",
+        "title": "Show Json Example Configuration [Thread]"
+      },
+      {
+        "command": "unregisterCompletions",
+        "title": "Unregister completions"
       }
     ],
     "menus": {
@@ -94,5 +132,8 @@
     "mocha": "^10.2.0",
     "typescript": "^4.9.5",
     "@vscode/test-electron": "^2.2.3"
+  },
+  "dependencies": {
+    "vscode-languageclient": "^7.0.0"
   }
 }
