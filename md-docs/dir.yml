@@ -1,7 +1,7 @@
 .:
 - README: 1
 - Makefile函数: 2
-- 常用函数: 3
+- 常用Makefile: 3
 - 隐含规则: 4
 - make参数: 5
 - 自动化变量: 6

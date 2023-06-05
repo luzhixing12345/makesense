@@ -85,8 +85,8 @@ def _validate_json(source):
 @makefile_server.feature(TEXT_DOCUMENT_COMPLETION, CompletionOptions(trigger_characters=[',']))
 def completions(params: Optional[CompletionParams] = None) -> CompletionList:
     """Returns completion items."""
-    document = makefile_server.workspace.get_document(params.text_document.uri)
-    current_line = document.lines[params.position.line].strip()
+    # document = makefile_server.workspace.get_document(params.text_document.uri) : 文件的url
+    # current_line = document.lines[params.position.line].strip() : 当前的修改位置
     return CompletionList(
         is_incomplete=False,
         items=[
@@ -121,22 +121,23 @@ async def count_down_10_seconds_non_blocking(ls, *args):
         await asyncio.sleep(COUNT_DOWN_SLEEP_IN_SECONDS)
 
 
+# 当文件被修改的时候
 @makefile_server.feature(TEXT_DOCUMENT_DID_CHANGE)
-def did_change(ls, params: DidChangeTextDocumentParams):
+def did_change(ls:LanguageServer, params: DidChangeTextDocumentParams):
     """Text document did change notification."""
     _validate(ls, params)
 
-
+# 当文件被关闭的时候
 @makefile_server.feature(TEXT_DOCUMENT_DID_CLOSE)
 def did_close(server: MakefileLanguageServer, params: DidCloseTextDocumentParams):
     """Text document did close notification."""
-    server.show_message('Text Document Did Close')
+    server.show_message('Text Document Did Close???')
 
 
 @makefile_server.feature(TEXT_DOCUMENT_DID_OPEN)
 async def did_open(ls, params: DidOpenTextDocumentParams):
     """Text document did open notification."""
-    ls.show_message('Text Document Did Open')
+    ls.show_message('Text Document Did Open???hjkhjk')
     _validate(ls, params)
 
 
